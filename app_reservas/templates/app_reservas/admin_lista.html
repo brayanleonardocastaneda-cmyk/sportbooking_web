@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="admin-container">
+    <div class="sidebar">
+        <p style="font-size: 0.8rem; color: var(--text-gray); font-weight: bold;">ADMINISTRACIÓN</p>
+        <h3 style="margin-top: 5px;">Panel del complejo</h3>
+        <br>
+        <a href="{% url 'panel_admin' %}">Canchas</a>
+        <a href="#" class="active">Reservas</a>
+        <a href="{% url 'panel_reportes' %}">Reportes</a>
+    </div>
+
+    <div class="main-content">
+        <h2>Reservas</h2>
+        <div style="display: flex; gap: 10px; margin: 20px 0;">
+            <select class="form-control" style="width: 150px;"><option>Todas</option></select>
+            <select class="form-control" style="width: 150px;"><option>Todas las canchas</option></select>
+            <input type="date" class="form-control" style="width: 150px;">
+            <button class="btn-primary" style="margin-left: auto;">Exportar ⬇️</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            {% for reserva in reservas %}
+            <div class="card" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="margin: 0;">{{ reserva.escenario.nombre }}</h4>
+                    <p style="margin: 5px 0; font-size: 0.85rem; color: var(--text-gray);">
+                        {{ reserva.fecha }} - {{ reserva.hora }} • {{ reserva.cliente.username }}
+                    </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span style="font-weight: bold; color: var(--primary-green);">$ {{ reserva.valor_total }}</span>
+                    <span style="font-size: 0.8rem; background: #f1f5f9; padding: 5px 10px; border-radius: 20px;">{{ reserva.estado }}</span>
+                    {% if reserva.estado == 'Activa' %}
+                    <a href="{% url 'completar_reserva' reserva.pk %}" style="text-decoration: none; font-size: 0.8rem; border: 1px solid #ccc; padding: 5px 10px; border-radius: 5px; color: black;">Completar</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

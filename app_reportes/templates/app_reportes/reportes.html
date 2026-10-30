@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Reportes - SportBooking{% endblock %}
+
+{% block content %}
+<div class="wrap">
+    
+    <!-- Encabezado del Panel -->
+    <div style="margin-bottom: 24px;">
+        <p style="font-size: 10px; color: var(--green); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">ADMINISTRACIÓN</p>
+        <h1 style="font-size: 22px; margin: 0; color: var(--ink);">Panel del complejo deportivo</h1>
+    </div>
+
+    <!-- Pestañas de navegación (Igual a tu foto) -->
+    <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+        <a href="{% url 'panel_admin' %}" style="padding: 6px 14px; background: white; border: 1px solid var(--line); border-radius: 20px; font-size: 12px; text-decoration: none; color: var(--ink);">Canchas</a>
+        <a href="{% url 'lista_reservas_admin' %}" style="padding: 6px 14px; background: white; border: 1px solid var(--line); border-radius: 20px; font-size: 12px; text-decoration: none; color: var(--ink);">Reservas</a>
+        <a href="{% url 'panel_reportes' %}" style="padding: 6px 14px; background: var(--navy); color: white; border: 1px solid var(--navy); border-radius: 20px; font-size: 12px; text-decoration: none;">Reportes</a>
+        <a href="{% url 'validar_qr' %}" style="padding: 6px 14px; background: white; border: 1px solid var(--line); border-radius: 20px; font-size: 12px; text-decoration: none; color: var(--ink);">Validador QR</a>
+    </div>
+
+    <!-- Tarjetas de Datos (Ingresos, Horas, Ocupación) -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 20px;">
+            <p style="font-size: 10px; color: var(--muted); margin: 0 0 8px 0; text-transform: uppercase;">Ingresos totales</p>
+            <h2 style="margin: 0; font-size: 24px;">$ {{ ingresos_totales }}</h2>
+        </div>
+        <div class="card" style="padding: 20px;">
+            <p style="font-size: 10px; color: var(--muted); margin: 0 0 8px 0; text-transform: uppercase;">Horas vendidas</p>
+            <h2 style="margin: 0; font-size: 24px;">{{ horas_vendidas }}</h2>
+        </div>
+        <div class="card" style="padding: 20px;">
+            <p style="font-size: 10px; color: var(--muted); margin: 0 0 8px 0; text-transform: uppercase;">Ocupación</p>
+            <h2 style="margin: 0; font-size: 24px;">{{ ocupacion }}%</h2>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="card" style="padding: 20px; margin-bottom: 16px;">
+        <h3 style="font-size: 14px; margin: 0 0 16px 0; color: var(--ink);">Horas pico</h3>
+        <canvas id="graficoHorasPico" height="80"></canvas>
+    </div>
+
+    <div class="card" style="padding: 20px;">
+        <h3 style="font-size: 14px; margin: 0 0 16px 0; color: var(--ink);">Ingresos por cancha</h3>
+        <canvas id="graficoIngresos" height="80"></canvas>
+    </div>
+
+</div>
+
+<!-- Inyección de datos segura desde Django a JS -->
+{{ horas_pico_json|json_script:"datos-horas" }}
+{{ ingresos_por_cancha_json|json_script:"datos-ingresos" }}
+
+<!-- Librería de Gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // 1. Recuperamos los datos de forma segura (esto evita los errores rojos)
+    const horasPico = JSON.parse(document.getElementById('datos-horas').textContent);
+    const ingresosCancha = JSON.parse(document.getElementById('datos-ingresos').textContent);
+
+    // 2. Configuración Gráfico de Horas Pico
+    const ctx1 = document.getElementById('graficoHorasPico').getContext('2d');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: horasPico.map(item => item.hora),
+            datasets: [{
+                label: 'Reservas',
+                data: horasPico.map(item => item.total),
+                backgroundColor: '#10b981', // Tu verde
+                borderRadius: 4,
+                barThickness: 30 // Hace las barras más gruesas como en tu foto
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }, // Ocultar leyenda
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 3. Configuración Gráfico de Ingresos por Cancha
+    const ctx2 = document.getElementById('graficoIngresos').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ingresosCancha.map(item => item.nombre),
+            datasets: [{
+                label: 'Ingresos ($)',
+                data: ingresosCancha.map(item => item.total),
+                backgroundColor: '#172a46', // Tu azul oscuro (navy)
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+</script>
+{% endblock %}

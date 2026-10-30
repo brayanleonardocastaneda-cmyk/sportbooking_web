@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 1200px; margin: 20px auto; display: flex; gap: 30px; padding: 20px;">
+    <!-- Columna Izquierda -->
+    <div style="flex: 2;">
+        <a href="{% url 'explorar' %}" style="text-decoration: none; color: var(--text-gray);">← Volver</a>
+        <img src="{{ cancha.imagen.url }}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px; margin: 15px 0;">
+        <span style="background: #e0f2fe; color: #0369a1; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem;">{{ cancha.tipo }}</span>
+        <h1 style="font-size: 2rem; margin: 10px 0;">{{ cancha.nombre }}</h1>
+        <p>📍 Barranquilla, Vía 40</p>
+        <p style="color: var(--text-gray);">{{ cancha.descripcion }}</p>
+
+        <div style="background: white; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h4>Reseñas y calificaciones</h4>
+            <div style="display: flex; align-items: center; gap: 20px; margin-top: 15px;">
+                <div>
+                    <h1 style="font-size: 3rem; margin: 0;">0.0</h1>
+                    <p style="margin: 0; color: var(--text-gray); font-size: 0.8rem;">0 reseñas</p>
+                </div>
+                <div style="flex: 1;">
+                    <p style="margin: 5px 0;">Aún no hay reseñas. ¡Sé el primero en calificar!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna Derecha (Tarjeta de Reserva) -->
+    <div style="flex: 1;">
+        <div class="card" style="padding: 20px;">
+            <h2 style="margin: 0; font-size: 1.8rem;">$ {{ cancha.precio_hora }} <span style="font-size: 1rem; color: var(--text-gray); font-weight: normal;">/ hora</span></h2>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-gray);">FECHA</label>
+                <input type="date" class="form-control">
+            </div>
+            
+            <p style="font-size: 0.8rem; color: var(--text-gray); margin-bottom: 10px;">BLOQUES DISPONIBLES</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                <button class="form-control" style="background: white;">07:00</button>
+                <button class="form-control" style="background: white;">08:00</button>
+                <button class="form-control" style="background: #e2e8f0; color: #94a3b8; cursor: not-allowed;">09:00</button>
+                <button class="form-control" style="background: white;">10:00</button>
+            </div>
+            <p style="font-size: 0.7rem; color: var(--text-gray); margin: 10px 0;">Los horarios en gris ya están ocupados.</p>
+            
+            <a href="{% url 'crear_reserva' cancha.pk %}" class="btn-primary" style="display: block; text-align: center; text-decoration: none; padding: 15px;">Reservar ahora</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

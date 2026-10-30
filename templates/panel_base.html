@@ -1,0 +1,28 @@
+{# templates/panel_base.html — marco del panel del administrador (título + pestañas) #}
+{% extends "base.html" %}
+{% block contenido %}
+{% url 'app_escenarios:panel_canchas' as u_canchas %}
+{% url 'app_reservas:panel_reservas' as u_reservas %}
+{% url 'app_reportes:panel_reportes' as u_reportes %}
+{% url 'app_tickets:panel_validador' as u_qr %}
+{% with app=request.resolver_match.app_name %}
+<style>
+.panel-tabs{display:flex;gap:8px;margin:18px 0 26px;flex-wrap:wrap}
+.panel-tabs a{background:#eef2f7;border-radius:999px;padding:6px 16px;font-size:12px;font-weight:600;color:#334155}
+.panel-tabs a.on{background:var(--ink);color:#fff}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.panel-head h2{font-size:18px}
+</style>
+<main class="wrap">
+  <div class="kicker">Administración</div>
+  <h1 style="font-size:28px;margin-top:6px">Panel del complejo deportivo</h1>
+  <div class="panel-tabs">
+    <a href="{{ u_canchas|default:'/escenarios/panel/' }}" class="{% if app == 'app_escenarios' %}on{% endif %}">Canchas</a>
+    <a href="{{ u_reservas|default:'/reservas/panel/' }}" class="{% if app == 'app_reservas' %}on{% endif %}">Reservas</a>
+    <a href="{{ u_reportes|default:'/reportes/' }}" class="{% if app == 'app_reportes' %}on{% endif %}">Reportes</a>
+    <a href="{{ u_qr|default:'/tickets/' }}" class="{% if app == 'app_tickets' %}on{% endif %}">Validador QR</a>
+  </div>
+  {% block panel %}{% endblock %}
+</main>
+{% endwith %}
+{% endblock %}

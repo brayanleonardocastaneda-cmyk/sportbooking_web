@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="admin-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <p style="font-size: 0.8rem; color: var(--text-gray); font-weight: bold;">ADMINISTRACIÓN</p>
+        <h3 style="margin-top: 5px;">Panel del complejo</h3>
+        <br>
+        <a href="#" class="active">Canchas</a>
+        <a href="{% url 'lista_reservas_admin' %}">Reservas</a>
+        <a href="{% url 'panel_reportes' %}">Reportes</a>
+        <a href="{% url 'validar_qr' %}">Validador QR</a>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Escenarios</h2>
+            <a href="{% url 'crear_escenario' %}" class="btn-primary" style="text-decoration: none;">+ Agregar cancha</a>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;">
+            {% for cancha in canchas %}
+            <div class="card" style="padding: 15px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <img src="{{ cancha.imagen.url }}" style="width: 100px; height: 60px; border-radius: 8px; object-fit: cover;">
+                    <div>
+                        <h4 style="margin: 0;">{{ cancha.nombre }}</h4>
+                        <p style="margin: 5px 0; font-size: 0.85rem; color: var(--text-gray);">{{ cancha.tipo }} - $ {{ cancha.precio_hora }}/h</p>
+                        <span style="font-size: 0.8rem; color: var(--primary-green);">● {{ cancha.estado }}</span>
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'editar_escenario' cancha.pk %}" style="text-decoration: none; margin-right: 15px;">✏️</a>
+                    <a href="{% url 'eliminar_escenario' cancha.pk %}" style="text-decoration: none; color: red;">🗑️</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

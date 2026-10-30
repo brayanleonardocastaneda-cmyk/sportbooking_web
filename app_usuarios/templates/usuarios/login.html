@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block extra_css %}
+<style>
+.auth-page{min-height:calc(100vh - 50px);display:grid;place-items:center;background:linear-gradient(135deg,#f8fafc 0%,#eef8f5 100%)}
+.auth-card{width:min(420px,calc(100vw - 32px));padding:36px}.auth-card h1{font-size:26px;margin-bottom:8px}.auth-card .subtitle{color:#64748b;margin-bottom:24px}.field{margin-bottom:16px}.auth-card .btn{width:100%;height:44px}.auth-link{text-align:center;margin-top:18px;color:#64748b}.auth-link a{color:#059669;font-weight:700}
+</style>
+{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="card auth-card">
+    <div class="kicker">Bienvenido</div>
+    <h1>Iniciar sesión</h1>
+    <p class="subtitle">Accede para reservar tu cancha.</p>
+    <form method="post">{% csrf_token %}
+      {% if error %}<div class="msg error">{{ error }}</div>{% endif %}
+      <div class="field"><label class="label" for="email">Correo electrónico</label><input class="input" id="email" name="email" type="email" required placeholder="correo@ejemplo.com"></div>
+      <div class="field"><label class="label" for="password">Contraseña</label><input class="input" id="password" name="password" type="password" required placeholder="Tu contraseña"></div>
+      <button class="btn btn-green" type="submit">Entrar</button>
+    </form>
+    <p class="auth-link">¿No tienes cuenta? <a href="{% url 'app_usuarios:registro' %}">Regístrate</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="admin-container">
+    <div class="sidebar">
+        <a href="{% url 'panel_admin' %}">Canchas</a>
+        <a href="{% url 'lista_reservas_admin' %}">Reservas</a>
+        <a href="{% url 'panel_reportes' %}">Reportes</a>
+        <a href="#" class="active">Validador QR</a>
+    </div>
+
+    <div class="main-content">
+        <div class="card" style="max-width: 500px; padding: 40px; text-align: center;">
+            <div style="font-size: 3rem; color: var(--primary-green);">[ ]</div>
+            <h3>Validador de acceso QR</h3>
+            <p style="color: var(--text-gray); font-size: 0.9rem;">Escanea o ingresa el código del comprobante.</p>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <input type="text" name="codigo" class="form-control" placeholder="SB-XXXXXXX" required>
+                    <button type="submit" class="btn-primary">Validar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
